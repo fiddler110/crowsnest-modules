@@ -1,0 +1,6 @@
+2026-11-12T10:00:01 INF StartGame
+2026-11-12T10:00:20 INF [Steamworks.NET] GameServer.LogOn successful, SteamID=90000000000000000
+2026-11-12T10:05:11 INF Player connected, entityid=171, name=Alice, steamid=76561198000000001, steamOwner=76561198000000001, PlayerName='Alice', ip=10.0.0.5
+2026-11-12T10:07:30 INF Player connected, entityid=172, name=Bob Smith, steamid=76561198000000002, steamOwner=76561198000000002, PlayerName='Bob Smith', ip=10.0.0.6
+2026-11-12T10:20:00 INF Player Alice disconnected after 14.8 minutes
+2026-11-12T10:30:00 INF Player Bob Smith disconnected after 22.5 minutes

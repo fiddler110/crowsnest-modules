@@ -1,0 +1,59 @@
+api_version: 1
+id: sevendtd
+name: 7 Days to Die
+accent: "#f87171"
+description: "7 Days to Die dedicated server (didstopia/7dtd-server). Players are read from the server log; the world is saved on stop."
+# Written from the game's documented server log and the image's README; confirm the markers on a first real
+# session (see testdata/sevendtd_session.log) and adjust if a line differs.
+# Ports: 26900 tcp+udp is the game; 26901-26903 udp are query/extra. The web dashboard (8080) and telnet (8081)
+# stay on the private games network and are not published.
+
+connect:
+  - {label: Join password, option: server_password}
+
+runtime:
+  ram: 8g                 # 4g minimum, 8g to 16g recommended
+  image: didstopia/7dtd-server
+  stop_grace: 60s        # the server saves the world on SIGTERM
+  data_dir: 7DaysToDie
+  ports:
+    - {port: 26900, proto: tcp, why: "players connect here"}
+    - {port: 26900, proto: udp, why: "players connect here"}
+    - {port: 26901, proto: udp, why: "Steam query"}
+    - {port: 26902, proto: udp, why: "game traffic"}
+    - {port: 26903, proto: udp, why: "game traffic"}
+  data:
+    - {path: /steamcmd/7dtd, sub: server-files}
+    - {path: /app/.local/share/7DaysToDie, sub: server-data}
+  env:
+    - SEVEN_DAYS_TO_DIE_UPDATE_CHECKING=1
+    - SEVEN_DAYS_TO_DIE_START_MODE=0
+    - SEVEN_DAYS_TO_DIE_BRANCH=${branch}
+    - SEVEN_DAYS_TO_DIE_SERVER_NAME=${server_name}
+    - SEVEN_DAYS_TO_DIE_SERVER_PASSWORD=${server_password}
+
+backup:
+  # Saves live under server-data; archive the whole folder.
+  exec: ["/bin/sh", "-c", "mkdir -p /app/.local/share/7DaysToDie/backups && tar czf /app/.local/share/7DaysToDie/backups/manual-$(date +%Y%m%d-%H%M%S).tar.gz --exclude=backups -C /app/.local/share 7DaysToDie"]
+  dir: /app/.local/share/7DaysToDie/backups
+  before_stop: true
+  restore: ["/bin/sh", "-c", "set -e; rm -rf /app/.local/share/7DaysToDie/Saves; tar xzf \"$CROWSNEST_RESTORE_FILE\" -C /app/.local/share 7DaysToDie/Saves; chown -R \"$(stat -c %u:%g /app/.local/share/7DaysToDie)\" /app/.local/share/7DaysToDie/Saves"]
+
+options:
+  - {key: branch, label: "Steam branch (public, or an alpha like latest_experimental)", default: public}
+  - {key: server_name, label: Server name, default: CrowsNest 7 Days to Die}
+  - {key: server_password, label: Join password, secret: true}
+
+status:
+  ready_log: 'GameServer\.LogOn successful'
+players:
+  type: log_markers
+  join: "Player connected, entityid=\\d+, name=(.+?), steamid="
+  leave: "Player (.+?) disconnected after "
+  world: 'GameName\s*=\s*(\S+)'
+
+startup:
+  - {match: 'Updating|Downloading', pct: 20, label: Updating server files}
+  - {match: 'StartGame', pct: 50, label: Loading world}
+  - {match: 'World\.Load', pct: 70, label: Loading world}
+  - {match: 'GameServer\.LogOn successful', pct: 100, label: Server ready}
