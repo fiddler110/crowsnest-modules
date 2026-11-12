@@ -12,7 +12,7 @@ connect:
   - {label: Join password, option: server_password}
 
 runtime:
-  ram: 8g                 # 4g minimum, 8g to 16g recommended
+  ram: 10g                # 4g minimum, 8g to 16g recommended
   image: didstopia/7dtd-server
   stop_grace: 60s        # the server saves the world on SIGTERM
   data_dir: 7DaysToDie
