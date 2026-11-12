@@ -290,6 +290,14 @@ They need the `crowsnest` binary on PATH, or `CROWSNEST=/path/to/crowsnest`. Mod
 
 ## Modules here
 
-| Folder | Game | Image | Status |
-|---|---|---|---|
-| `sevendtd` | 7 Days to Die | `didstopia/7dtd-server` | valid, signed, installs end to end; log patterns, backup and restore not yet run against a real server |
+| Folder | Game | Image | Offered on the Games page | Status |
+|---|---|---|---|---|
+| `sevendtd` | 7 Days to Die | `didstopia/7dtd-server` | yes | valid, signed, installs end to end; log patterns, backup and restore not yet run against a real server |
+| `minecraft` | Minecraft Java | `itzg/minecraft-server` | yes | markers checked against a documented-format log and a real 26.3 start-up |
+| `source` | TF2, CS2, CS:S, CS 1.6, L4D2 ... | (you choose) | no: `module: source` in `config.yaml` | players parsed from RCON `status`, tested against sample output |
+| `dontstarve` | Don't Starve Together | (you choose) | no: `module: dontstarve` in `config.yaml` | patterns checked against a documented-format log |
+
+`valheim`, `palworld` and `windrose` are bundled inside CrowsNest itself and are not here. `minecraft`, `source` and
+`dontstarve` used to be bundled and moved here; a module with no `runtime:` section (`source`, `dontstarve`) only
+supplies status and players for a game you define in `config.yaml`, so install it into `modules_dir` rather than
+adding a game from the Games page.
