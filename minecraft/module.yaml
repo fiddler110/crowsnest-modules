@@ -60,9 +60,60 @@ players:
   leave: 'INFO\]: (\S+) left the game\s*$'
   world: 'Preparing level "([^"]+)"'
 
+# Files admins can edit from the dashboard (the container needs sh, head, cp and mv, which this image has).
+files:
+  - id: server-properties
+    label: Server settings
+    path: /data/server.properties
+    redact: ['^rcon\.password=(.*)$']
+    restart: "Restart to apply it. Settings this container sets from its environment (MOTD, difficulty, and so on) are re-applied on every start and override this file."
+  - id: ops
+    label: Operators
+    path: /data/ops.json
+    max_bytes: 32768
+    restart: "Restart to apply it. Or use the Console (op / deop) instead of editing the file."
+
 rcon:
   addr: ${rcon_addr}
   password_env: ${rcon_password_env}
+
+# Admin actions over RCON (needs rcon_addr and the password env var above). Each one is a single
+# Minecraft console command; the player name is checked and only ever fills its own slot.
+actions:
+  - {id: list, label: Players, rcon: "list"}
+  - id: say
+    label: Announce
+    fields: [{name: message, label: Message, max: 200}]
+    rcon: "say {message}"
+    result: Announced.
+  - {id: save, label: Save world, rcon: "save-all flush", result: World saved.}
+  - id: kick
+    label: Kick
+    danger: true
+    fields:
+      - {name: player, label: Player name, max: 32}
+      - {name: reason, label: Reason (optional), optional: true, max: 200}
+    rcon: "kick {player} {reason}"
+  - id: ban
+    label: Ban
+    danger: true
+    fields:
+      - {name: player, label: Player name, max: 32}
+      - {name: reason, label: Reason (optional), optional: true, max: 200}
+    rcon: "ban {player} {reason}"
+  - id: pardon
+    label: Unban
+    fields: [{name: player, label: Player name, max: 32}]
+    rcon: "pardon {player}"
+  - id: whitelist_add
+    label: Whitelist add
+    fields: [{name: player, label: Player name, max: 32}]
+    rcon: "whitelist add {player}"
+  - id: whitelist_remove
+    label: Whitelist remove
+    fields: [{name: player, label: Player name, max: 32}]
+    rcon: "whitelist remove {player}"
+  - {id: whitelist_list, label: Whitelist, rcon: "whitelist list"}
 
 startup:
   - {match: 'Starting minecraft server version', pct: 30, label: Starting server}
