@@ -17,3 +17,7 @@ documented-format session) and `sample-real-26.3.log` (a real 26.3 start-up, no 
 written for the image's layout and tested in CrowsNest's own tests, not on a long-running server.
 
 Moved here from CrowsNest's bundled modules; CrowsNest keeps a test copy.
+
+Admin actions over RCON: players, announce, save, kick, ban, pardon and whitelist add, remove and list.
+
+Admins can edit `server.properties` and `ops.json` from the dashboard (Files tab). The container re-applies settings it gets from its environment on every start, so those override edits to the file.

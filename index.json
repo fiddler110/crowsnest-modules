@@ -1,0 +1,28 @@
+{
+  "modules": [
+    {
+      "id": "minecraft",
+      "name": "Minecraft",
+      "description": "Minecraft Java (itzg/minecraft-server; vanilla, Paper, Fabric, Forge)",
+      "url": "https://raw.githubusercontent.com/fiddler110/crowsnest-modules/main/minecraft/module.yaml"
+    },
+    {
+      "id": "source",
+      "name": "Source engine",
+      "description": "TF2, CS2, CS:S, CS 1.6, L4D, L4D2, DoD:S, HL2DM and similar, over RCON",
+      "url": "https://raw.githubusercontent.com/fiddler110/crowsnest-modules/main/source/module.yaml"
+    },
+    {
+      "id": "dontstarve",
+      "name": "Don't Starve Together",
+      "description": "Don't Starve Together dedicated server",
+      "url": "https://raw.githubusercontent.com/fiddler110/crowsnest-modules/main/dontstarve/module.yaml"
+    },
+    {
+      "id": "sevendtd",
+      "name": "7 Days to Die",
+      "description": "7 Days to Die (didstopia/7dtd-server)",
+      "url": "https://raw.githubusercontent.com/fiddler110/crowsnest-modules/main/sevendtd/module.yaml"
+    }
+  ]
+}
